@@ -1,0 +1,16 @@
+name: data_prep_ml
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - python == 3.9
+  - pandas
+  - isort
+  - pytest
+  - pre-commit
+  - flake8
+  - pip
+    blake
+    pandas
+    numpy
+
