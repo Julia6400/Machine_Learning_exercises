@@ -11,7 +11,7 @@ data = seaborn.load_dataset('penguins')
 degree_list = [1, 3, 5]
 
 # visualization
-base = alt.Chart(data).mark_circle(color="black").encode(alt.X("bill_length_mm"), alt.Y("flipper_length_mm"))
+base = alt.Chart(data).mark_circle(color="black").encode(alt.X("bill_length_mm", title="Bill lenght"), alt.Y("flipper_length_mm", title="Flipper lenght"))
 
 polynomial_fit = [base.transform_regression(
     "bill_length_mm", "flipper_length_mm", method="poly", order=order, as_=["bill_length_mm", str(order)])
@@ -20,8 +20,7 @@ polynomial_fit = [base.transform_regression(
     .encode(alt.Color("degree:N"))
     for order in degree_list]
 
-# html save
-
+# and tooltip html save
 alt.layer(base, *polynomial_fit)\
     .encode(tooltip=['bill_length_mm', 'flipper_length_mm'])\
     .interactive()\
