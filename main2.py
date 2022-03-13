@@ -2,6 +2,7 @@
 import pandas as pd
 from matplotlib import pyplot as plt
 import csv
+import os
 
 
 # table and dataframes
@@ -25,14 +26,12 @@ def main():
     anscombe_equations['variation'] = anscombe_y_values.var().round(2)
     anscombe_equations = anscombe_y_values.corr(method='pearson')
 
+# creating new folder and adding csv file
 
-# save fo csv
-    with open('result.csv', 'w', encoding='UTF8', newline='') as f:
-        writer = csv.writer(f)
-        writer.writerow(anscombe_equations)
+    os.mkdir('results_folder')
+    anscombe_equations.to_csv(os.path.join('results_folder', 'result.csv'))
 
     fig, axs = plt.subplots(2, 2)
-
 
     # I plot
     axs[0, 0].scatter(x, y1, c='red')
@@ -61,6 +60,8 @@ def main():
     fig.set_figheight(8)
     fig.set_figwidth(8)
     plt.show()
+
+    plt.savefig('results_folder/anscombe_plot.jpg')
 
 
 if __name__ == '__main__':
