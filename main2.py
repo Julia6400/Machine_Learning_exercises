@@ -61,6 +61,7 @@ def main():
     fig.set_figwidth(8)
     plt.show()
 
+#plot save
     plt.savefig('results_folder/anscombe_plot.jpg')
 
 
