@@ -1,12 +1,10 @@
 # libraries
-import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
 import csv
 
 
-# table
-
+# table and dataframes
 def main():
     x = [10, 8, 13, 9, 11, 14, 6, 4, 12, 7, 5]
     y1 = [8.04, 6.95, 7.58, 8.81, 8.33, 9.96, 7.24, 4.26, 10.84, 4.82, 5.68]
@@ -15,38 +13,26 @@ def main():
     x4 = [8, 8, 8, 8, 8, 8, 8, 19, 8, 8, 8]
     y4 = [6.58, 5.76, 7.71, 8.84, 8.47, 7.04, 5.25, 12.50, 5.56, 7.91, 6.89]
 
-
     data = [x, y1, y2, y3, x4, y4]
+    anscombe_df = pd.DataFrame(data).transpose()
+    anscombe_df.columns = ['x', 'y1', 'y2', 'y3', 'x4', 'y4']
+    anscombe_y_values = anscombe_df.iloc[:, lambda anscombe_df: [1, 2, 3, 5]]
 
-    df = pd.DataFrame(data).transpose()
-
-    df.columns = ['x', 'y1', 'y2', 'y3', 'x4', 'y4']
-
-    df_y = df.iloc[:, lambda df : [1, 2, 3, 5]]
-
-
-    df_disc = {
-        'I': y1,
-        'II': y2,
-        'III': y3,
-        'IV': y4,
-    }
-
-    anscombe_df = pd.DataFrame(df_disc, index=x)
-    anscombe_df.plot(subplots=True, figsize=(5, 15), style="o", ms=10)
-
-    anscombe_df = pd.DataFrame()
-    anscombe_df['mean'] = df_disc.mean().round(2)
-    anscombe_df['std'] = df_disc.std().round(2)
-    anscombe_df['var'] = df_disc.var().round(2)
-    anscombe_df_pearson = df_disc.corr(method='pearson')
+# equations for mean, standard deviation, variation and pearson
+    anscombe_equations = pd.DataFrame()
+    anscombe_equations['mean'] = anscombe_y_values.mean().round(2)
+    anscombe_equations['standard deviation'] = anscombe_y_values.std().round(2)
+    anscombe_equations['variation'] = anscombe_y_values.var().round(2)
+    anscombe_equations = anscombe_y_values.corr(method='pearson')
 
 
-    with open('result.csv', 'w') as f:
+# save fo csv
+    with open('result.csv', 'w', encoding='UTF8', newline='') as f:
         writer = csv.writer(f)
-        writer.writerow(anscombe_df)
+        writer.writerow(anscombe_equations)
 
     fig, axs = plt.subplots(2, 2)
+
 
     # I plot
     axs[0, 0].scatter(x, y1, c='red')
@@ -79,6 +65,4 @@ def main():
 
 if __name__ == '__main__':
     main()
-# anscombe_df.mean().round(2)
-# print(anscombe_df.mean().round(2))
 
