@@ -1,7 +1,6 @@
 # libraries
 import pandas as pd
 from matplotlib import pyplot as plt
-import csv
 import os
 
 
@@ -28,7 +27,7 @@ def main():
 
 # creating new folder and adding csv file
 
-    os.mkdir('results_folder')
+    #os.mkdir('results_folder')
     anscombe_equations.to_csv(os.path.join('results_folder', 'result.csv'))
 
     fig, axs = plt.subplots(2, 2)
@@ -62,7 +61,7 @@ def main():
     plt.show()
 
 #plot save
-    plt.savefig('results_folder/anscombe_plot.jpg')
+    plt.savefig('results_folder/plot.png')
 
 
 if __name__ == '__main__':
