@@ -14,18 +14,18 @@ df = pd.read_csv('houses_data.csv')
 df.drop_duplicates()
 
 # checking data types
-print(df.dtypes)
+print("\n Data types: \n", df.dtypes)
 
 # columns with missing values
 count_nan = df.isnull().sum().sum()
 count_nan_in_df = df.isnull().sum()
-print('Count of NaN: ' + str(count_nan))
-print(count_nan_in_df)
+print('\nTotal count of NaN: \n' + str(count_nan))
+print('\nCount of NaN in specific columns: \n', count_nan_in_df)
 
 missing_values = df.isnull().sum() / len(df)
 missing_values = missing_values[missing_values > 0]
 missing_values.sort_values(inplace=True)
-print(missing_values)
+print("\n Missing values:\n", round(missing_values,3))
 
 missing_values = missing_values.to_frame()
 missing_values.columns = ['count']
@@ -68,14 +68,14 @@ for col in df_corr:
         diff += [[col, a]]
 
 diff = pd.DataFrame(diff, columns=['Column', 'Corelation vs col price'])
-print(diff.sort_values(by=['Corelation vs col price']))
+print("\n Correlation: \n", diff.sort_values(by=['Corelation vs col price']))
 
 
 # checking variable number of rooms
 df_count = df.groupby('Rooms')['Price'] \
        .agg(count_rooms='size', mean_price='mean') \
        .reset_index().round(2)
-print(df_count)
+print("\n Number of rooms in the apartments: \n", df_count)
 
 # choosing interval for rooms
 rooms_2 = df.loc[df['Rooms'] == 2]
