@@ -113,7 +113,7 @@ def remove_outliners(df: pd.DataFrame, just_numerics=False):
     bool_filter = IQR(df)
     return df.mask(bool_filter)
 
-
+MAE DO URUCHOMIENIA
 # MAE
 # houses_predictors = df[['Distance', 'Car', 'Bathroom']]
 # houses_target = df['Price']
