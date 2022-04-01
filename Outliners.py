@@ -1,3 +1,4 @@
+# libraries
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -6,12 +7,11 @@ from scipy.stats import median_abs_deviation, zscore
 
 # 1. ZADANIE WSTĘPNE
 
-# 3 kolumny
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_absolute_error
-from sklearn.model_selection import train_test_split
+# Dla 3 kolumn o numerycznych wartościach przedstaw:
 
-df = pd.read_csv('houses_data.csv')
+
+df = pd.read_csv('houses_data.csv', parse_dates=['Date'])
+df.drop('Date', axis=1, inplace=True)
 df_new = df.loc[:, ('Distance', 'Car', 'Bathroom')]
 
 print(df_new.dtypes)
@@ -41,21 +41,22 @@ def mean_statistics(df: pd.DataFrame):
     data = {"Attributes": attributes,
             "Mean": df.mean().tolist(),
             "Median": df.median().tolist(),
-            "SD": df.std().tolist(),
+            "Std": df.std().tolist(),
             "Q1": df.quantile(0.25).tolist(),
             "Q3": df.quantile(0.75).tolist(),
             "IQR": (df.quantile(0.25) - df.quantile(0.75)).tolist()}
-    DataFrame = pd.DataFrame(data)
-    DataFrame = DataFrame.set_index(["Attributes"])
-    return DataFrame
+    frame = pd.DataFrame(data)
+    frame = frame.set_index(["Attributes"])
+    return frame
 
 
 # 2. ZADANIE GŁÓWNE
 
+
 # log transform
-def log_transform_method(df: pd.DataFrame):
-    columns = np.log(df)
-    return columns
+def log_transform(df: pd.DataFrame):
+    df = df.replace(0, np.nan)
+    return np.log(df)
 
 
 # usuwanie za pomocą IQR
@@ -78,9 +79,18 @@ def fill_with_median(df: pd.DataFrame):
 # removing 0.1 & 0.9 percentile
 
 def percentile_method(df: pd.DataFrame):
-    percentile = df < np.percentile(df, 90),
+    percentile = df < np.percentile(df, 90)
     percentile = df > np.percentile(df, 10)
     return percentile
+
+
+# 3sigma
+def sigma_oulier(df: pd.DataFrame):
+    column_mean = df.mean()
+    sigma = 3 * df.std(ddof=0)
+    lower_limit = column_mean - sigma
+    upper_limit = column_mean + sigma
+    return (df < lower_limit) | (df > upper_limit)
 
 
 # zscore
@@ -88,6 +98,8 @@ def percentile_method(df: pd.DataFrame):
 def zscore_outlier(df: pd.DataFrame):
     return zscore(df) > 2
 
+
+# modified_z_score_outlier
 
 def modified_z_score_outlier(df: pd.DataFrame):
     mad_column = median_abs_deviation(df)
@@ -97,12 +109,13 @@ def modified_z_score_outlier(df: pd.DataFrame):
 
 
 outliers_methods_dict = {
-    #"log transform": log_transform,
-    "z_score": zscore_outlier,
-    "fill_with_median": fill_with_median,
-    "per_metod_0.1-0.9": percentile_method,
-    "IQR": IQR,
-    "mod_z_score": modified_z_score_outlier
+    "log transform": log_transform,
+    "3sigma": sigma_oulier,
+    "z score": zscore_outlier,
+    "mod z score": modified_z_score_outlier,
+    "fill with median": fill_with_median,
+    "percentile method (0.1-0.9)": percentile_method,
+    "IQR": IQR
 }
 
 for method_name, method in outliers_methods_dict.items():
@@ -116,40 +129,21 @@ def remove_outliners(df: pd.DataFrame, just_numerics=False):
     bool_filter = IQR(df)
     return df.mask(bool_filter)
 
-
-def score_dataset(X_train, X_test, y_train, y_test):
-    regr_model = LinearRegression()
-    regr_model.fit(X_train, y_train)
-    preds = regr_model.predict(X_test)
-
-    return mean_absolute_error(y_test, preds)
-
-
-n=0
-MAE_comp = pd.DataFrame()
-
-for i in outliers_methods_dict:
-    list = ['z_score"','fill_with_median','per_metod_0.1-0.9','IQR','mod_z_score']
-    array = i
-    houses_predicted = i[['z_score"','fill_with_median']]
-    houses_target = i[['per_metod_0.1-0.9','IQR','mod_z_score']]
-    X_train, X_test, y_train, y_test = train_test_split(houses_predicted,
-                                                       houses_target,
-                                                       train_size=0.7,
-                                                       test_size=0.3,
-                                                       random_state=0)
-
-    lr= round(score_dataset(X_train, X_test, y_train, y_test),2)
-    MAE_df = pd.DataFrame({"method": list[n],"MAE": lr},index=[1] )
-    MAE_comp = pd.concat([MAE_comp, MAE_df], ignore_index=True)
-    n+=1
-
-print(MAE_comp)
-
-
+# from sklearn.linear_model import LinearRegression
+# from sklearn.metrics import mean_absolute_error
+# from sklearn.model_selection import train_test_split
+# houses_predictors = df_new[['Distance', 'Car']]
+# houses_target = df_new['Bathroom']
 #
-# #print(get_quantivative_date(df=df_new))
-# print(generate_statistics(df=df_new))
-# print(mean_statistics(df=df_new))
-# # print(remove_outliners(df=df_new))
-# # print(fill_with_median(df=df_new))
+# X_train, X_test, y_train, y_test = train_test_split(houses_predictors, houses_target,
+#                                                     train_size=0.7, test_size=0.3, random_state=0)
+#
+#
+# def score_dataset(X_train, X_test, y_train, y_test):
+#     regr_model = LinearRegression()
+#     regr_model.fit(X_train, y_train)
+#     preds = regr_model.predict(X_test)
+#     return mean_absolute_error(y_test, preds)
+#
+#
+# result = score_dataset(X_train, X_test, y_train, y_test)
