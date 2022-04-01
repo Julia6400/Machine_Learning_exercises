@@ -28,7 +28,7 @@ def main():
 # creating new folder and adding csv file
 
     #os.mkdir('results_folder')
-    anscombe_equations.to_csv(os.path.join('results_folder', 'result.csv'))
+    anscombe_equations.to_csv(os.path.join('results_folder', '../result.csv'))
 
     fig, axs = plt.subplots(2, 2)
 

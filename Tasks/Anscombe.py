@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import os
 
 # create dir to save newly emerging data and plot
-SAVE_DIR = os.path.join(os.getcwd(), "saved")
+SAVE_DIR = os.path.join(os.getcwd(), "../saved")
 
 
 # initialize Anscombe's quartet data and create DataFrame
