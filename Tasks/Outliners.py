@@ -18,7 +18,7 @@ print(df_new.dtypes)
 attributes = list(df_new.head())
 
 # boxplot
-sns.boxplot(data=df_new, orient="h", palette="Set2")
+sns.boxplot(data=df_new, orient="h", palette="Set2").set_title("Outliners")
 plt.show()
 
 
@@ -48,6 +48,11 @@ def mean_statistics(df: pd.DataFrame):
     frame = pd.DataFrame(data)
     frame = frame.set_index(["Attributes"])
     return frame
+
+
+# print(get_quantivative_date(df_new))
+# print(generate_statistics(df_new))
+# print(mean_statistics(df_new))
 
 
 # 2. ZADANIE GŁÓWNE
@@ -99,7 +104,7 @@ def zscore_outlier(df: pd.DataFrame):
     return zscore(df) > 2
 
 
-# modified_z_score_outlier
+# z score outlier
 
 def modified_z_score_outlier(df: pd.DataFrame):
     mad_column = median_abs_deviation(df)
@@ -123,27 +128,13 @@ for method_name, method in outliers_methods_dict.items():
     print(df_new.apply(lambda x: method(x)).sum())
 
 
+# usuwanie outlierów za pomocą IQR
+
 def remove_outliners(df: pd.DataFrame, just_numerics=False):
     if just_numerics:
         df = get_quantivative_date(df)
     bool_filter = IQR(df)
     return df.mask(bool_filter)
 
-# from sklearn.linear_model import LinearRegression
-# from sklearn.metrics import mean_absolute_error
-# from sklearn.model_selection import train_test_split
-# houses_predictors = df_new[['Distance', 'Car']]
-# houses_target = df_new['Bathroom']
-#
-# X_train, X_test, y_train, y_test = train_test_split(houses_predictors, houses_target,
-#                                                     train_size=0.7, test_size=0.3, random_state=0)
-#
-#
-# def score_dataset(X_train, X_test, y_train, y_test):
-#     regr_model = LinearRegression()
-#     regr_model.fit(X_train, y_train)
-#     preds = regr_model.predict(X_test)
-#     return mean_absolute_error(y_test, preds)
-#
-#
-# result = score_dataset(X_train, X_test, y_train, y_test)
+
+#print(remove_outliners(df_new))

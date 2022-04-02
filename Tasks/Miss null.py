@@ -27,13 +27,13 @@ print("\n Data types: \n", df.dtypes)
 # columns with missing values
 count_nan = df.isnull().sum().sum()
 count_nan_in_df = df.isnull().sum()
-print('\nTotal count of NaN: \n' + str(count_nan))
-print('\nCount of NaN in specific columns: \n', count_nan_in_df)
+# print('\nTotal count of NaN: \n' + str(count_nan))
+# print('\nCount of NaN in specific columns: \n', count_nan_in_df)
 
 missing_values = df.isnull().sum() / len(df)
 missing_values = missing_values[missing_values > 0]
 missing_values.sort_values(inplace=True)
-print("\n Missing values:\n", round(missing_values,3))
+# print("\n Missing values:\n", round(missing_values,3))
 
 missing_values = missing_values.to_frame()
 missing_values.columns = ['count']
