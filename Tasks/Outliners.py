@@ -8,10 +8,10 @@ from scipy.stats import median_abs_deviation, zscore
 # 1. ZADANIE WSTĘPNE
 
 # Dla 3 kolumn o numerycznych wartościach przedstaw:
+from sklearn.impute import KNNImputer
+from sklearn.model_selection import train_test_split
 
-
-df = pd.read_csv('houses_data.csv', parse_dates=['Date'])
-df.drop('Date', axis=1, inplace=True)
+df = pd.read_csv('houses_data.csv')
 df_new = df.loc[:, ('Distance', 'Car', 'Bathroom')]
 
 print(df_new.dtypes)
@@ -50,9 +50,9 @@ def mean_statistics(df: pd.DataFrame):
     return frame
 
 
-# print(get_quantivative_date(df_new))
-# print(generate_statistics(df_new))
-# print(mean_statistics(df_new))
+print(get_quantivative_date(df_new))
+print(generate_statistics(df_new))
+print(mean_statistics(df_new))
 
 
 # 2. ZADANIE GŁÓWNE
@@ -137,4 +137,26 @@ def remove_outliners(df: pd.DataFrame, just_numerics=False):
     return df.mask(bool_filter)
 
 
-#print(remove_outliners(df_new))
+# print(remove_outliners(df_new))
+impt = KNNImputer()
+impt.fit(df_new[['Distance', 'Car', 'Bathroom']])
+impt_results = impt.transform(df_new[['Distance', 'Car', 'Bathroom']])
+
+def count_mae(df: pd.DataFrame):
+    list_of_mae = ['MAE']
+    df = ([impt_results(df) for df in df])
+
+    for df in df:
+        houses_predictors = df[df]
+        houses_target = df['Price']
+        X_train, X_test, y_train, y_test = train_test_split(houses_predictors,
+                                                            houses_target,
+                                                            train_size=0.7,
+                                                            test_size=0.3,
+                                                            random_state=0)
+        result = outliers_methods_dict(X_train, X_test, y_train, y_test)
+        list_of_mae.append(result.round(2))
+    return list_of_mae
+
+
+print(count_mae(df))
