@@ -10,8 +10,10 @@ dependencies:
   - pre-commit
   - flake8
   - pip
-    blake
-    pandas
-    numpy
-    seaborn
+  - pip:
+    - blake
+    - pandas
+    - seaborn
+    - git+https://github.com/hyperopt/hyperopt-sklearn
+
 
