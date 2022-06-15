@@ -15,5 +15,14 @@ dependencies:
     - pandas
     - seaborn
     - git+https://github.com/hyperopt/hyperopt-sklearn
+    - matplotlib
+    - isort
+    - altair
+    - altair_viewer
+    - altair_saver
+    - numpy
+    - scikit-learn
+    - scipy
+    - vega
 
 
